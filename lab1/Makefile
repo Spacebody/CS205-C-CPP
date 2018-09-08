@@ -14,4 +14,5 @@ cal_distance: $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS)
 
 .PHONY: clean
+clean:
 	-rm -f *.o cal_distance
