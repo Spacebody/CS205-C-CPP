@@ -59,43 +59,92 @@ int UTF8string::find(std::string substr)
 
 int UTF8string::replace(UTF8string &to_remove, UTF8string &replacement)
 {
-    if (to_remove.bytes() >= replacement.bytes()) // if the length of to_remove > the length of replacement
+    int is_replaced = 0;
+    if (to_remove.bytes() == replacement.bytes()) // length of to_remove == the length of replacement
     {
-        unsigned char *pos_ptr =
-                utf8_search((unsigned char *)this->str.c_str(), (unsigned char *)to_remove.str.c_str());
-        if (pos_ptr == NULL)
-            return -1;
-        int lenptr = 0;
-        unsigned char *pt = (unsigned char *)this->str.c_str();
-        // move the pointer to the position
-        while (pt != pos_ptr)
+        unsigned char *pos_ptr = NULL;
+        while ((pos_ptr = utf8_search((unsigned char *)this->str.c_str(), \
+                (unsigned char *)to_remove.str.c_str())))
         {
-            utf8_to_codepoint(pt, &lenptr);
-            pt += lenptr;
+            is_replaced = 1;
+            int lenptr = 0;
+            unsigned char *pt = (unsigned char *)this->str.c_str();
+            // move the pointer to the position
+            while (pt != pos_ptr)
+            {
+                utf8_to_codepoint(pt, &lenptr);
+                pt += lenptr;
+            }
+            // copy the replacement to to_remove
+            strncpy((char *)pt, (char *)replacement.str.c_str(), (size_t)to_remove.bytes()); 
         }
-        strcpy((char *)pt, (char *)replacement.str.c_str()); // copy the replacement to to_remove
     }
-    else // if the length of to_remove < the length of replacement
+    else if (to_remove.bytes() > replacement.bytes()) // length of to_remove > the length of replacement
     {
-        // allocate a new memory
-        char *tmp =
-                (char *)malloc(sizeof(char) * (this->bytes() + replacement.bytes() - to_remove.bytes()));
-        if (tmp == NULL)
-            return -1;  // not enough space
-        strcpy(tmp, this->str.c_str()); // copy original string
-        unsigned char *pos_ptr =
-            utf8_search((unsigned char *)tmp, (unsigned char *)to_remove.str.c_str());
-        if (pos_ptr == NULL)
-            return -1;
-        int lenptr = 0;
-        unsigned char *pt = (unsigned char *)tmp;
-        while (pt != pos_ptr)
+        unsigned char *pos_ptr = NULL;
+        int movement = to_remove.bytes() - replacement.bytes();
+        int total_movement = 0;
+        while ((pos_ptr = utf8_search((unsigned char *)this->str.c_str(),
+                                      (unsigned char *)to_remove.str.c_str())))
         {
-            utf8_to_codepoint(pt, &lenptr);
-            pt += lenptr;
+            is_replaced = 1;
+            total_movement += movement;
+            int lenptr = 0;
+            unsigned char *pt = (unsigned char *)this->str.c_str();
+            // move the pointer to the position
+            while (pt != pos_ptr)
+            {
+                utf8_to_codepoint(pt, &lenptr);
+                pt += lenptr;
+            }
+            // copy the replacement to to_remove
+            strncpy((char *)pt, (char *)replacement.str.c_str(), (size_t)replacement.bytes()); 
+            unsigned char *tmp_ptr = pt;
+            pt += replacement.bytes();
+            tmp_ptr += to_remove.bytes();
+            strcpy((char *)pt, (char *)tmp_ptr);
         }
-        strcpy((char *)pt, (char *)replacement.str.c_str());
-        this->str = tmp;  // call constructor to re-assign the string
+        if(is_replaced)
+        {
+            char *tmp =
+                (char *)malloc(sizeof(char) * (this->bytes() - total_movement + 1));
+            if (tmp == NULL) return -1;  // not enough space
+            strncpy(tmp, this->str.c_str(), (size_t)(strlen(this->str.c_str()) + 1)); // copy original string
+            this->str = tmp;
+        }
     }
-    return 0;
+    else // length of to_remove < the length of replacement
+    {
+        unsigned char *pos_ptr = NULL;
+        int difference = replacement.bytes() - to_remove.bytes();
+        while ((pos_ptr = utf8_search((unsigned char *)this->str.c_str(), (unsigned char *)to_remove.str.c_str())))
+        {
+            is_replaced = 1;
+            // allocate a new memory
+            char *tmp =
+                (char *)malloc(sizeof(char) * (this->bytes() + difference));
+            if (tmp == NULL) return -1; // not enough space
+            int lenptr = 0;
+            unsigned char *pt = (unsigned char *)this->str.c_str();
+            while (pt != pos_ptr)
+            {
+                utf8_to_codepoint(pt, &lenptr);
+                pt += lenptr;
+            }
+            char *tmp_ptr = tmp;
+            strncpy(tmp_ptr, this->str.c_str(), (size_t)((char *)pt - this->str.c_str()));                                                 // substring before to_remove
+            tmp_ptr += (char *)pt - this->str.c_str();  // move the position
+            // replace to_remove
+            strncpy((char *)tmp_ptr, (char *)replacement.str.c_str(), (size_t)(replacement.bytes())); 
+            tmp_ptr += replacement.bytes();
+            strcpy((char *)tmp_ptr, (char *)(pt + to_remove.bytes()));
+            this->str = tmp; // call constructor to re-assign the string
+        }
+    }
+    return is_replaced == 1 ? 0 : -1;  // -1 means not found
+}
+
+std::string UTF8string::content()
+{
+    return this->str;
 }
