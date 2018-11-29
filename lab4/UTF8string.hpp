@@ -22,7 +22,8 @@ class UTF8string
       int length();                                                // return the length in characters
       int bytes();                                                 // return the length in bytes
       int find(std::string substr);                                // find the position of the substr
-      int replace(UTF8string &to_remove, UTF8string &replacement); // replace to_remove with replacement
+      int replace(UTF8string &to_remove, UTF8string &replacement); // replace to_remove with replacement in pure C style
+      int replace2(UTF8string &to_remove, UTF8string &replacement); // replace to_remove with replacement in C++ style
       std::string content();                                       // get the content of the string;
 };
 

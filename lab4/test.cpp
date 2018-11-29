@@ -20,8 +20,15 @@ int main()
     std::cout << "position of the utf-8 sub-string: " << test_str2.find("眼镜") << std::endl;
     UTF8string to_remove2("老虎");
     UTF8string replacement2("老鼠");
+    std::cout << "Replacement in pure C style:" << std::endl;
     std::cout << "before replacement: " << test_str2.content() << std::endl;
     test_str2.replace(to_remove2, replacement2);
+    std::cout << "after replacement: " << test_str2.content() << std::endl;
+    UTF8string to_remove3("跑得快");
+    UTF8string replacement3("飞得太慢");
+    std::cout << "Replacement in C++ style:" << std::endl;
+    std::cout << "before replacement: " << test_str2.content() << std::endl;
+    test_str2.replace2(to_remove3, replacement3);
     std::cout << "after replacement: " << test_str2.content() << std::endl;
     return 0;
 }

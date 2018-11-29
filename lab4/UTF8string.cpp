@@ -1,5 +1,6 @@
 #include "utf8.h"
 #include "UTF8string.hpp"
+#include "string"
 
 UTF8string::UTF8string(std::string str)
 {
@@ -142,6 +143,20 @@ int UTF8string::replace(UTF8string &to_remove, UTF8string &replacement)
         }
     }
     return is_replaced == 1 ? 0 : -1;  // -1 means not found
+}
+
+int UTF8string::replace2(UTF8string &to_remove, UTF8string &replacement)
+{
+    if(to_remove.length() == 0 || replacement.length() == 0) return -1;
+    else
+    {
+        int pos = 0;
+        for(; (pos = this->str.find(to_remove.content())) != std::string::npos; pos = 0)
+        {
+            this->str.replace(pos, to_remove.bytes(), replacement.content());
+        }
+    }
+    return 1;
 }
 
 std::string UTF8string::content()
