@@ -11,6 +11,7 @@ The lab codes for course CS 205 C/C++
 - lab2: A program read data from `world_cities.csv` and then provide users for quering the distance between two cities.
 - lab3: Identify languages of text
 - lab4: class `UTF8string`
+- lab5: extend the class `UTF8string` with operators `<<`,  `+`,  `+=`,  `*`, `!` overloaded
 
 ### Author
 
