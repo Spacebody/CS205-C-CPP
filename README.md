@@ -12,6 +12,7 @@ The lab codes for course CS 205 C/C++
 - lab3: Identify languages of text
 - lab4: class `UTF8string`
 - lab5: extend the class `UTF8string` with operators `<<`,  `+`,  `+=`,  `*`, `!` overloaded
+- lab6: class `Box` with attributes height `h`, length `l`, and breadth `b`, operators  `<` and `<<`   overloaded.
 
 ### Author
 
