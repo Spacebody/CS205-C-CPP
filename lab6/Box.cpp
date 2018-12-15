@@ -25,18 +25,19 @@ long long Box::CalculateVolume() const
 // friend cannot use 'this' pointer
 std::ostream &operator<<(std::ostream &os, const Box &box)
 {
-    os << box.getLength() << " " << box.getBreadth() << " " << box.getHeight();
+    // os << box.l << " " << box.b << " " << box.h;
+    os << box.l << " " << box.b << " " << box.h;
     return os;
 }
 
 bool operator<(const Box &A, const Box &B)
 {
-    if(A.getLength() < B.getLength())  // A.l < B.l
+    if(A.l < B.l)  // A.l < B.l
         return true;
-    else if(A.getBreadth() < B.getBreadth() && A.getLength() == B.getLength())  // A.b < B.b and A.l == B.l
+    else if(A.b < B.b && A.l == B.l)  // A.b < B.b and A.l == B.l
         return true;
-    else if (A.getHeight() < B.getHeight() && A.getBreadth() == B.getBreadth() && \
-            A.getLength() == B.getLength())  // A.h < B.h and A.b == B.b and A.l == B.l
+    else if (A.h < B.h && A.b == B.b && \
+            A.l == B.l)  // A.h < B.h and A.b == B.b and A.l == B.l
         return true;
     else
         return false;  // otherwise, return as false

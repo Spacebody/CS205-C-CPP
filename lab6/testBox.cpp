@@ -4,7 +4,8 @@
 int main(int argc, char *argv[])
 {
     //test
-    Box box(5, 5, 5);  // constructor
+    Box box_0(-1, -3, 1000000);
+    Box box(5, 5, 5);               // constructor
     std::cout << box << std::endl;  // test <<
     // test memberfunctions
     std::cout << "Length: " << box.getLength() << std::endl;

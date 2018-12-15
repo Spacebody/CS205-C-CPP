@@ -12,7 +12,21 @@ class Box
 
   public:
     Box() : l(0), b(0), h(0) {}  // default constructor
-    Box(int length, int breadth, int height) : l(length), b(breadth), h(height) {}  // parameterized constructor
+    Box(int length, int breadth, int height) : l(length), b(breadth), h(height) 
+    {
+        // 
+        try
+        {
+            if (l < 0 || b < 0 || h < 0 || l > 100000 || b > 100000 || h > 100000)
+            {
+                throw std::string("ERROR: length or breadth or height cannot be larger than 0 and less than 100000.");
+            }
+        }
+        catch (std::string s) 
+        {
+            std::cout << s << std::endl;
+        }
+    }  // parameterized constructor
     Box(const Box &box); // copy constructor
     ~Box() {}  // destrcutor
 
